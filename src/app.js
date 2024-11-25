@@ -9,6 +9,15 @@ app.use("/admin", adminAuth)
 app.get("/admin/getAllUser", (req, res, next) => {
     res.send("get all users")
 });
+app.get("/admin/deleteAllUser", (req, res, next) => {
+    throw new Error("error in delete user")
+    res.send("delete all users")
+});
+app.use("/", (err, req, res, next) => {
+    if(err){
+        res.send(500).send("Something went wrong!");
+    }
+});
 
 
 // format 1
