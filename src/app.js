@@ -1,6 +1,8 @@
 const express = require("express");
-
+const connectDB = require("./config/database")
 const app = express();
+
+const User = require("./models/user")
 
 // middleware
 const {adminAuth} = require("./middlewares/auth")
@@ -18,7 +20,7 @@ app.use("/", (err, req, res, next) => {
         res.send(500).send("Something went wrong!");
     }
 });
-
+ 
 
 // format 1
 // app.use("/user", (req, res, next) => {
@@ -36,6 +38,30 @@ app.use("/", (err, req, res, next) => {
 //     res.send("test response 2")
 // }])
 
-app.listen(3000, () => {
-    console.log("server is running on port 3000");
+app.post("/signup", async (req, res) => {
+    const newUser = new User({
+        firstName: "Sajal",
+        lastName: "Gupta",
+        emailId: "sajal@gmail.com",
+        age: 24,
+        gender: "male"
+    })
+
+    try{
+        await newUser.save();
+        res.send("user added successfully");
+    }
+    catch(err){
+        res.status(400).send("Error saving the user " + err.message)
+    }
+})
+
+connectDB().then(() => {
+    console.log("Database connection estabilished")
+    app.listen(3000, () => {
+        console.log("server is running on port 3000");
+    });
+})
+.catch((err) => {
+    console.error("Database cannot be connected")
 });
